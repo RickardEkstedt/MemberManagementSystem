@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rickards Individuella Lab</title>
+    <link rel="stylesheet" type="text/css" href="/css/Styles.css">
+</head>
+<body>
+<div>
+    <h1>Members</h1>
+    <div class="member-container" th:each="member : ${members}">
+        <div class="member-info">
+            <h3 th:text="${member.getFirstName()}"></h3>
+            <p>Last Name: <span th:text="${member.getLastName()}"></span></p>
+            <p>Address: <span th:text="${member.getAddress()}"></span></p>
+            <p>Email: <span th:text="${member.getEmail()}"></span></p>
+            <p>Phone: <span th:text="${member.getPhone()}"></span></p>
+            <p>Date of Birth: <span th:text="${member.getDateOfBirth()}"></span></p>
+            <a th:href="@{/admin/deletemember/{id}(id=${member.id})}">
+                <button>Delete this member</button>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
