@@ -1,9 +1,6 @@
 package com.ekstedt.individuelllab.controllers;
 
-import com.ekstedt.individuelllab.entities.Address;
 import com.ekstedt.individuelllab.entities.Member;
-import com.ekstedt.individuelllab.exceptions.ResourceNotFoundException;
-import com.ekstedt.individuelllab.repositories.AddressRepository;
 import com.ekstedt.individuelllab.repositories.MemberRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +22,7 @@ public class MemberController {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
-    private AddressRepository addressRepository;
+
 
     @RequestMapping(value = "/admin/members", method = RequestMethod.GET)
     @ResponseBody
@@ -43,40 +39,13 @@ public class MemberController {
 
     @RequestMapping(value = "/admin/addmember", method = RequestMethod.POST)
     public ResponseEntity<Member> addMember(@RequestBody Member member) {
-        // Kontrollera om medlemmen har en giltig adress
-        if (member.getAddress() == null) {
-            // Om medlemmen inte har en adress, returneras ett felstatus meddelande
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-
-        // Hämta den befintliga adressen från databasen baserat på adressens id
-        Long addressId = member.getAddress().getId();
-        Address existingAddress = addressRepository.findById(addressId)
-                .orElseThrow(() -> new RuntimeException("Address not found with ID: " + addressId));
-
-        // Tilldela den befintliga adressen till den nya medlemmen
-        member.setAddress(existingAddress);
-
-        Member savedMember = memberRepository.save(member);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedMember);
+        return memberServices.addMember(member);
     }
 
 
     @RequestMapping(value = "/admin/updatemember/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member updatedMember) {
-        Member existingMember = memberRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Member", "id", id));
-
-        existingMember.setFirstName(updatedMember.getFirstName());
-        existingMember.setLastName(updatedMember.getLastName());
-        existingMember.setAddress(updatedMember.getAddress());
-        existingMember.setEmail(updatedMember.getEmail());
-        existingMember.setPhone(updatedMember.getPhone());
-        existingMember.setDateOfBirth(updatedMember.getDateOfBirth());
-
-        memberRepository.save(existingMember);
-
-        return ResponseEntity.status(HttpStatus.OK).body(existingMember);
+        return memberServices.updateMember(id, updatedMember);
     }
 
     @RequestMapping(value = "/admin/deletemember/{id}", method = RequestMethod.DELETE)

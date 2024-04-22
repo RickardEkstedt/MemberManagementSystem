@@ -1,6 +1,7 @@
 package com.ekstedt.individuelllab.services;
 
 import com.ekstedt.individuelllab.entities.Member;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -9,9 +10,9 @@ public interface MemberServiceInterface {
 
     Member getMemberById(Long id);
 
-    void addMember(Member member);
+    ResponseEntity<Member> addMember(Member member);
 
-    Member updateMember(Long id, Member member);
+    ResponseEntity<Member> updateMember(Long id, Member member);
 
     void deleteMemberById(Long id);
 
